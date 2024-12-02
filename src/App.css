@@ -5,38 +5,60 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  background-color: rgb(51, 51, 60);
+  color: white;
+  margin: 0;
+  font-size: 12px;
+  
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.movie_img img{
+  width: 200px;
+  height: 300px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+li {
+  list-style: none;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.65);
+  width: 45%;
 }
 
-.card {
-  padding: 2em;
+ul {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  max-width: 940px;
+  justify-content: space-around;
 }
 
-.read-the-docs {
-  color: #888;
+.movie_rating {
+  border-radius: 25px;
+  border: rgb(233, 209, 0) 2px solid;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.movie_title {
+  font-size: 16px;
+}
+
+.movie_cont {
+  display: flex;
+  justify-content: space-between;
+}
+
+.movie_info {
+  margin: 12px 10px 15px 15px ;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
