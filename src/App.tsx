@@ -4,6 +4,8 @@ import { Spinner } from "./comp/Spinner";
 import { MovieItem } from "./comp/MovieItem";
 import { ErrorAlert } from "./comp/Alert";
 import { useDebounce } from "use-debounce";
+import { Api } from "./comp/Api";
+import { Pages } from "./comp/Pages";
 
 interface Movie {
   id: number;
@@ -13,80 +15,75 @@ interface Movie {
   poster_path: string;
   rating: number;
   vote_average: number;
+  genre_ids: number[];
 }
+
+const key = "2176ee0575aeb26423d516f34f7ee67f";
 
 const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchWord, setSearchWord] = useState("");
-  const [debouncedSearchWord] = useDebounce(searchWord, 500); // Задержка в 500 мс
+  const [debouncedSearchWord] = useDebounce(searchWord, 500);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalResults, setTotalResults] = useState<number>(0);
+  const api = new Api(key);
 
   const fetchMovies = async (page: number = 1) => {
-    const options = {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMTc2ZWUwNTc1YWViMjY0MjNkNTE2ZjM0ZjdlZTY3ZiIsIm5iZiI6MTczMjc5MzU0NS43NzY1NzM0LCJzdWIiOiI2NzQ4NTFiY2E2NTE0NWY1NThkYWZiMGUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.hHaxfHbnRJ7bKSj3G1CkC5ykfnsjWntrcakiMi17Brs",
-      },
-    };
-
     try {
       setLoading(true);
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&query=${debouncedSearchWord}`,
-        options
-      );
-      if (!response.ok) {
-        throw new Error("Что-то пошло не так");
-      }
-      const data = await response.json();
+      const data = await api.searchMovies(debouncedSearchWord, page);
       setMovies(data.results);
+      setTotalResults(data.total_results);
       setLoading(false);
     } catch (err) {
-      setError("Ошибка запроса");
+      setError("Ошибка запроса фильмов");
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, [debouncedSearchWord]);
-
-  if (loading) {
-    return <Spinner />;
-  }
-
-  if (error) {
-    return <ErrorAlert text={error} />;
-  }
+    fetchMovies(currentPage);
+  }, [debouncedSearchWord, currentPage]);
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(event.target.value);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div>
       <h1>Movie List</h1>
       <input
+        className="search"
         placeholder="Начните писать для поиска"
         onChange={onSearch}
-      ></input>
-      <ul>
+      />
+      {loading && <Spinner />}
+      {error && <ErrorAlert text={error} />}
+      <ul className="list">
         {movies.map((movie) => (
-          <li key={movie.id}>
+          <li className="item" key={movie.id}>
             <MovieItem
               title={movie.title}
               releaseDate={movie.release_date}
               overview={movie.overview}
               rating={Number(movie.vote_average.toFixed(1))}
               posterPath={movie.poster_path}
+              genreIds={movie.genre_ids}
             />
           </li>
         ))}
       </ul>
+      <Pages
+        onChange={handlePageChange}
+        defaultCurrent={currentPage}
+        total={totalResults}
+      />
     </div>
   );
 };

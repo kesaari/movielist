@@ -1,7 +1,8 @@
 #root {
   max-width: 1280px;
+  min-width: 420px;
+  width: 80%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -10,28 +11,40 @@ body {
   color: white;
   margin: 0;
   font-size: 12px;
-  
+}
+
+.list {
+  margin: 20px auto;
+  padding-left: 0;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  padding: 2%;
+  min-width: 400px;
+  width: 97%;
+  background-color: rgba(0, 0, 0, 0.65);
+  list-style: none;
+  display: grid;
+  grid-template-columns: 20% 1fr 1fr;
+  justify-items: start;
+  gap: 12px;
+  grid-template-areas: "img title rate"
+                        "img date  ..."
+                        "img genre  ..."
+                        "text text text"
+                        "star star star";
+}
+
+.movie_img {
+  grid-area: img;
 }
 
 .movie_img img{
-  width: 200px;
-  height: 300px;
-}
-
-li {
-  list-style: none;
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.65);
-  width: 45%;
-}
-
-ul {
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 0;
-  max-width: 940px;
-  justify-content: space-around;
+  width: 100%;
+  height: auto;
 }
 
 .movie_rating {
@@ -42,19 +55,23 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+  grid-area: rate;
+  justify-self: end;
+
+}
+
+.movie_date {
+  grid-area: date;
+}
+
+.movie_overview {
+  grid-area: text;
+  text-align: left;
 }
 
 .movie_title {
   font-size: 16px;
-}
-
-.movie_cont {
-  display: flex;
-  justify-content: space-between;
-}
-
-.movie_info {
-  margin: 12px 10px 15px 15px ;
+  grid-area: title;
 }
 
 .bg-red {
@@ -71,4 +88,45 @@ ul {
 
 .bg-green {
   border-color: #66E900;
+}
+
+.search {
+  width: 100%;
+}
+
+.stars .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
+.ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
+  color: #ccc;
+}
+
+.movie_genres {
+  display: flex;
+  gap: 10px;
+  grid-area: genre;
+}
+
+.genre {
+  background-color: rgb(24, 144, 255);
+  padding: 4px;
+  border-radius: 2px;
+  height: 20px;
+}
+
+@media (min-width: 800px) {
+  .list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .item {
+    max-width: 450px;
+    grid-template-areas: "img title rate"
+                        "img date ..."
+                        "img genre ..."
+                        "img text text"
+                        "img star star";
+    grid-template-columns: 35% 1fr 1fr;
+  }
+
 }
