@@ -38,28 +38,28 @@ class Api {
   }
 
   async rateMovie(movieId: number, guestSessionId: string, rating: number) {
-    const url = `${this.baseUrl}/movie/${movieId}/rating?api_key=${this.apiKey}&guest_session_id=${guestSessionId}`;
+    const url = `${this.baseUrl}/movie/${movieId}/rating?guest_session_id=${guestSessionId}&api_key=${this.apiKey}`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
-      body: JSON.stringify({value: rating}),
+      body: JSON.stringify({ value: rating }),
     });
     if (!response.ok) {
       throw new Error("Ошибка установки рейтинга");
     }
   }
 
-  async fetchRatedMovies(guestSessionId: string) {
-    const url = `${this.baseUrl}/guest_session/${guestSessionId}/rated/movies?api_key=${this.apiKey}`;
+  async fetchRatedMovies(guestSessionId: string, page: number = 1) {
+    const url = `${this.baseUrl}/guest_session/${guestSessionId}/rated/movies?language=en-US&page=${page}&sort_by=created_at.asc`;
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Ошибка запроса понравившихся фильмов");
+      throw new Error(`Ошибка запроса понравившихся фильмов: ${response.statusText}`);
     }
     const data = await response.json();
-    return data.results;
+    return data
   }
 }
 
-export {Api};
+export { Api };

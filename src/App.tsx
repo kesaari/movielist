@@ -1,91 +1,33 @@
-import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Spinner } from "./comp/Spinner";
-import { MovieItem } from "./comp/MovieItem";
-import { ErrorAlert } from "./comp/Alert";
-import { useDebounce } from "use-debounce";
-import { Api } from "./comp/Api";
-import { Pages } from "./comp/Pages";
+import React from "react";
+import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router-dom";
+import MovieList from "./comp/MovieList";
+import RatedMovies from "./comp/RatedMovieList";
+import { GenreProvider } from "./comp/GenreContext";
 
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  release_date: string;
-  poster_path: string;
-  rating: number;
-  vote_average: number;
-  genre_ids: number[];
-}
-
-const key = "2176ee0575aeb26423d516f34f7ee67f";
-
-const MovieList: React.FC = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [searchWord, setSearchWord] = useState("");
-  const [debouncedSearchWord] = useDebounce(searchWord, 500);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalResults, setTotalResults] = useState<number>(0);
-  const api = new Api(key);
-
-  const fetchMovies = async (page: number = 1) => {
-    try {
-      setLoading(true);
-      const data = await api.searchMovies(debouncedSearchWord, page);
-      setMovies(data.results);
-      setTotalResults(data.total_results);
-      setLoading(false);
-    } catch (err) {
-      setError("Ошибка запроса фильмов");
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMovies(currentPage);
-  }, [debouncedSearchWord, currentPage]);
-
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWord(event.target.value);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
+const App: React.FC = () => {
   return (
-    <div>
-      <h1>Movie List</h1>
-      <input
-        className="search"
-        placeholder="Начните писать для поиска"
-        onChange={onSearch}
-      />
-      {loading && <Spinner />}
-      {error && <ErrorAlert text={error} />}
-      <ul className="list">
-        {movies.map((movie) => (
-          <li className="item" key={movie.id}>
-            <MovieItem
-              title={movie.title}
-              releaseDate={movie.release_date}
-              overview={movie.overview}
-              rating={Number(movie.vote_average.toFixed(1))}
-              posterPath={movie.poster_path}
-              genreIds={movie.genre_ids}
-            />
-          </li>
-        ))}
-      </ul>
-      <Pages
-        onChange={handlePageChange}
-        defaultCurrent={currentPage}
-        total={totalResults}
-      />
-    </div>
+    <GenreProvider>
+      <BrowserRouter>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/search">Search</Link>
+              </li>
+              <li>
+                <Link to="/rated">Rated</Link>
+              </li>
+            </ul>
+          </nav>
+          <Routes>
+            <Route path="/" element={<Navigate to="/search" />} />
+            <Route path="/search" element={<MovieList />} />
+            <Route path="/rated" element={<RatedMovies />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </GenreProvider>
   );
 };
 
-export default MovieList;
+export default App;

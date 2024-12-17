@@ -1,8 +1,9 @@
-import React from "react";
-import {Rate} from "antd";
-import {format} from "date-fns";
+import React, { useState, useEffect } from "react";
+import { Rate } from "antd";
+import { format } from "date-fns";
 import cn from "classnames";
-import { useGenres } from "./Context";
+import { useGenres } from "./GenreContext";
+import { Api } from "./Api";
 
 interface MovieCardProps {
   title: string;
@@ -11,7 +12,11 @@ interface MovieCardProps {
   rating: number;
   posterPath: string;
   genreIds: number[];
+  movieId: number;
+  guestSessionId: string;
 }
+
+const key = "2176ee0575aeb26423d516f34f7ee67f";
 
 const MovieItem: React.FC<MovieCardProps> = ({
   title,
@@ -19,10 +24,30 @@ const MovieItem: React.FC<MovieCardProps> = ({
   overview,
   rating,
   posterPath,
-  genreIds
+  genreIds,
+  movieId,
+  guestSessionId,
 }) => {
-  const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
+  const [userRating, setUserRating] = useState<number | null>(null);
   const genres = useGenres();
+  const api = new Api(key);
+  const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const ratedMovies = await api.fetchRatedMovies(guestSessionId);
+        const ratedMovie = ratedMovies.find((movie: any) => movie.id === movieId);
+        if (ratedMovie) {
+          setUserRating(ratedMovie.rating);
+        }
+      } catch (err) {
+        console.error("Ошибка запроса фильмов:", err);
+      }
+    };
+    fetchRating();
+    console.log(guestSessionId)
+  }, [guestSessionId, movieId]);
 
   const textCropping = (str: string, max = 200, ellipsis = "…") => {
     if (str.length <= max) return str;
@@ -37,14 +62,23 @@ const MovieItem: React.FC<MovieCardProps> = ({
   try {
     formattedReleaseDate = format(new Date(releaseDate), "MMMM d, yyyy");
   } catch (error) {
-    console.error("Invalid date format:", releaseDate);
+    console.error("Неправильный формат даты!", releaseDate);
   }
 
   const getGenreElements = (genreIds: number[]) => {
-    return genreIds.map(id => {
-      const genre = genres.find(genre => genre.id === id);
+    return genreIds.map((id) => {
+      const genre = genres.find((genre) => genre.id === id);
       return genre ? <div key={id} className="genre">{genre.name}</div> : null;
     });
+  };
+
+  const handleRate = async (value: number) => {
+    setUserRating(value);
+    try {
+      await api.rateMovie(movieId, guestSessionId, value);
+    } catch (err) {
+      console.error("Ошибка рейтинга", err);
+    }
   };
 
   return (
@@ -52,6 +86,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
       <div className="movie_img">
         <img src={posterUrl} />
       </div>
+      
           <div className="movie_title">{title}</div>
           <div
             className={cn("movie_rating", {
@@ -66,9 +101,15 @@ const MovieItem: React.FC<MovieCardProps> = ({
         <div className="movie_date">{formattedReleaseDate}</div>
         <div className="movie_overview">{textCropping(overview)}</div>
         <div className="movie_genres">{getGenreElements(genreIds)}</div>
-        <Rate className="stars" count={10} style={{gridArea: "star", justifySelf: "center"}}/>
+        <Rate
+          className="stars"
+          count={10}
+          value={userRating !== null ? userRating : 0}
+          onChange={handleRate}
+          style={{ gridArea: "star", justifySelf: "center" }}
+        />
     </>
   );
 };
 
-export {MovieItem};
+export { MovieItem };
