@@ -16,7 +16,7 @@ interface MovieCardProps {
   guestSessionId: string;
 }
 
-const key = "2176ee0575aeb26423d516f34f7ee67f";
+// const key = "2176ee0575aeb26423d516f34f7ee67f";
 
 const MovieItem: React.FC<MovieCardProps> = ({
   title,
@@ -30,24 +30,23 @@ const MovieItem: React.FC<MovieCardProps> = ({
 }) => {
   const [userRating, setUserRating] = useState<number | null>(null);
   const genres = useGenres();
-  const api = new Api(key);
+  const api = new Api();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
 
-  useEffect(() => {
-    const fetchRating = async () => {
-      try {
-        const ratedMovies = await api.fetchRatedMovies(guestSessionId);
-        const ratedMovie = ratedMovies.find((movie: any) => movie.id === movieId);
-        if (ratedMovie) {
-          setUserRating(ratedMovie.rating);
-        }
-      } catch (err) {
-        console.error("Ошибка запроса фильмов:", err);
-      }
-    };
-    fetchRating();
-    console.log(guestSessionId)
-  }, [guestSessionId, movieId]);
+  // useEffect(() => {
+  //   const fetchRating = async () => {
+  //     try {
+  //       const ratedMovies = await api.fetchRatedMovies(guestSessionId);
+  //       const ratedMovie = ratedMovies.find((movie: any) => movie.id === movieId);
+  //       if (ratedMovie) {
+  //         setUserRating(ratedMovie.rating);
+  //       }
+  //     } catch (err) {
+  //       console.error("Ошибка запроса фильмов:", err);
+  //     }
+  //   };
+  //   fetchRating();
+  // }, [guestSessionId, movieId]);
 
   const textCropping = (str: string, max = 200, ellipsis = "…") => {
     if (str.length <= max) return str;
@@ -75,9 +74,9 @@ const MovieItem: React.FC<MovieCardProps> = ({
   const handleRate = async (value: number) => {
     setUserRating(value);
     try {
-      await api.rateMovie(movieId, guestSessionId, value);
+      await api.rateMovie(movieId, value, guestSessionId);
     } catch (err) {
-      console.error("Ошибка рейтинга", err);
+      console.error("Ошибка рейтинга: компонент");
     }
   };
 
@@ -86,7 +85,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
       <div className="movie_img">
         <img src={posterUrl} />
       </div>
-      
+
           <div className="movie_title">{title}</div>
           <div
             className={cn("movie_rating", {

@@ -6,6 +6,7 @@ import { ErrorAlert } from "./Alert";
 import { useDebounce } from "use-debounce";
 import { Api } from "./Api";
 import { Pages } from "./Pages";
+import { useGuestSession } from "./GuestContext";
 
 interface Movie {
   id: number;
@@ -18,7 +19,7 @@ interface Movie {
   genre_ids: number[];
 }
 
-const key = "2176ee0575aeb26423d516f34f7ee67f";
+// const key = "2176ee0575aeb26423d516f34f7ee67f";
 
 const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -28,18 +29,8 @@ const MovieList: React.FC = () => {
   const [debouncedSearchWord] = useDebounce(searchWord, 500);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
-  const api = new Api(key);
-
-  const fetchGuestSession = async () => {
-    try {
-      const data = await api.fetchGuestSession();
-      console.log(data)
-      setGuestSessionId(data);
-    } catch (err) {
-      setError("Ошибка создания гостевой сессии");
-    }
-  };
+  const guestSessionId = useGuestSession();
+  const api = new Api();
 
   const fetchMovies = async (page: number = 1) => {
     try {
@@ -55,18 +46,14 @@ const MovieList: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchGuestSession();
-  }, []);
-
-  useEffect(() => {
     if (guestSessionId) {
+      console.log(guestSessionId)
       fetchMovies(currentPage);
     }
   }, [debouncedSearchWord, currentPage, guestSessionId]);
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(event.target.value);
-    console.log(guestSessionId)
   };
 
   const handlePageChange = (page: number) => {

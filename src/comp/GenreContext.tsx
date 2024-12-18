@@ -11,11 +11,11 @@ interface GenreProviderProps {
   children: ReactNode;
 }
 
-const key = "2176ee0575aeb26423d516f34f7ee67f"
+// const key = "2176ee0575aeb26423d516f34f7ee67f"
 
 export const GenreProvider: React.FC<GenreProviderProps> = ({ children }) => {
   const [genres, setGenres] = useState<any[]>([]);
-  const api = new Api(key);
+  const api = new Api();
 
   const fetchGenres = async () => {
     try {
