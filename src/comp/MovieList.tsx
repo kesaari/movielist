@@ -8,6 +8,7 @@ import { Api } from "./Api";
 import { Pages } from "./Pages";
 import { useGuestSession } from "./GuestContext";
 
+
 interface Movie {
   id: number;
   title: string;
@@ -39,6 +40,12 @@ const MovieList: React.FC = () => {
       setMovies(data.results);
       setTotalResults(data.total_results);
       setLoading(false);
+
+      if (data.results.length === 0) {
+        setError("Фильмы по запросу не найдены");
+      } else {
+        setError(null);
+      }
     } catch (err) {
       setError("Ошибка запроса фильмов");
       setLoading(false);
@@ -46,8 +53,7 @@ const MovieList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (guestSessionId) {
-      console.log(guestSessionId)
+    if (guestSessionId && debouncedSearchWord) {
       fetchMovies(currentPage);
     }
   }, [debouncedSearchWord, currentPage, guestSessionId]);
@@ -61,6 +67,8 @@ const MovieList: React.FC = () => {
   };
 
   return (
+
+    
     <div>
       <h1>Movie List</h1>
       <input
@@ -68,6 +76,7 @@ const MovieList: React.FC = () => {
         placeholder="Начните писать для поиска"
         onChange={onSearch}
       />
+      
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
       <ul className="list">
@@ -86,11 +95,12 @@ const MovieList: React.FC = () => {
           </li>
         ))}
       </ul>
-      <Pages
+      {totalResults ? <Pages
         onChange={handlePageChange}
         defaultCurrent={currentPage}
         total={totalResults}
-      />
+      /> : null}
+      
     </div>
   );
 };

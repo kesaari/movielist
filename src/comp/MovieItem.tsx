@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import cn from "classnames";
 import { useGenres } from "./GenreContext";
 import { Api } from "./Api";
+import { useMovieRatings } from "./RatingContext";
 
 interface MovieCardProps {
   title: string;
@@ -28,10 +29,12 @@ const MovieItem: React.FC<MovieCardProps> = ({
   movieId,
   guestSessionId,
 }) => {
-  const [userRating, setUserRating] = useState<number | null>(null);
+  const { movieRatings, setMovieRating } = useMovieRatings();
   const genres = useGenres();
   const api = new Api();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
+
+  const userRating = movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
 
   // useEffect(() => {
   //   const fetchRating = async () => {
@@ -72,9 +75,12 @@ const MovieItem: React.FC<MovieCardProps> = ({
   };
 
   const handleRate = async (value: number) => {
-    setUserRating(value);
+    setMovieRating(movieId, value);
     try {
-      await api.rateMovie(movieId, value, guestSessionId);
+      const response = await api.rateMovie(movieId, value, guestSessionId);
+      if (response.status === 201) {
+        console.error("Ошибка рейтинга: статус 201");
+      }
     } catch (err) {
       console.error("Ошибка рейтинга: компонент");
     }
@@ -103,8 +109,8 @@ const MovieItem: React.FC<MovieCardProps> = ({
         <Rate
           className="stars"
           count={10}
-          value={userRating !== null ? userRating : 0}
-          onChange={handleRate}
+          value={userRating ? userRating : 0}
+          onChange={(value) => handleRate(value)}
           style={{ gridArea: "star", justifySelf: "center" }}
         />
     </>

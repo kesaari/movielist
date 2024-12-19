@@ -88,9 +88,20 @@ class Api {
       throw new Error(`Ошибка запроса понравившихся фильмов: апи`);
     }
     const data = await response.json();
-    console.log(data.results)
     return data.results
   }
 }
+
+// async fetchRating() {
+//   try {
+//     const ratedMovies = await api.fetchRatedMovies(guestSessionId);
+//     const ratedMovie = ratedMovies.find((movie: any) => movie.id === movieId);
+//     if (ratedMovie) {
+//       setUserRating(ratedMovie.rating);
+//     }
+//   } catch (err) {
+//     console.error("Ошибка запроса фильмов:", err);
+//   }
+// };
 
 export { Api };

@@ -28,7 +28,6 @@ export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({ chil
     };
 
     initSession();
-    // console.log(guestSessionId)
   }, []);
 
   return (

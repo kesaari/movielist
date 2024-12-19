@@ -74,11 +74,11 @@ const RatedMovies: React.FC = () => {
           </li>
         ))}
       </ul>
-      <Pages
-        onChange={handlePageChange}
-        defaultCurrent={currentPage}
-        total={totalResults}
-      />
+      {totalResults ? <Pages
+              onChange={handlePageChange}
+              defaultCurrent={currentPage}
+              total={totalResults}
+            /> : null}
     </div>
   );
 };
