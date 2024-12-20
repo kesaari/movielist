@@ -1,19 +1,27 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { Api } from "./Api";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import {Api} from "/src/const/Api";
 
 interface GuestSessionContextType {
   guestSessionId: string | null;
 }
 
-const GuestSessionContext = createContext<GuestSessionContextType | undefined>(undefined);
+const GuestSessionContext = createContext<GuestSessionContextType | undefined>(
+  undefined
+);
 
 interface GuestSessionProviderProps {
   children: ReactNode;
 }
 
-// const key = "2176ee0575aeb26423d516f34f7ee67f";
-
-export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({ children }) => {
+export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({
+  children,
+}) => {
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
   const api = new Api();
 
@@ -23,7 +31,7 @@ export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({ chil
         const newSession = await api.fetchGuestSession();
         setGuestSessionId(newSession);
       } catch (err) {
-        console.error('Ошибка создания гостевой сессии: ошибка контекста', err);
+        console.error("Ошибка создания гостевой сессии: ошибка контекста", err);
       }
     };
 
@@ -31,7 +39,7 @@ export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({ chil
   }, []);
 
   return (
-    <GuestSessionContext.Provider value={{ guestSessionId }}>
+    <GuestSessionContext.Provider value={{guestSessionId}}>
       {children}
     </GuestSessionContext.Provider>
   );

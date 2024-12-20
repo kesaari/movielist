@@ -11,6 +11,7 @@ const ErrorAlert: React.FC<Props> = ({text}) => {
       message="Ошибка"
       description={text}
       type="error"
+      style={{margin: "50px"}}
     />
   );
 };

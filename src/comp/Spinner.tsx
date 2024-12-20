@@ -1,6 +1,6 @@
-import React from 'react';
-import { Spin } from 'antd';
+import React from "react";
+import {Spin} from "antd";
 
-const Spinner: React.FC = () => <Spin />;
+const Spinner: React.FC = () => <Spin size="large" style={{margin: "50px"}} />;
 
-export { Spinner };
+export {Spinner};

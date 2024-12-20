@@ -11,21 +11,40 @@ body {
   color: white;
   margin: 0;
   font-size: 12px;
+  position: relative;
+}
+
+nav {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .search {
   height: 20px;
   border: none;
+  width: 100%;
 }
 
 .search:focus {
   outline: none;
 }
-
 nav ul li {
   list-style: none;
+}
+.nav-btn {
   color: white;
-  background-color: blue;
+  height: 50px;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  width: 64px;
+  justify-content: center;
+}
+
+.nav-btn:focus {
+  color: white;
+  background-color: rgb(24, 144, 255);
+  border-bottom: 2px white solid;
 }
 
 nav ul {
@@ -54,18 +73,19 @@ nav ul {
   grid-template-columns: 20% 1fr 1fr;
   justify-items: start;
   gap: 12px;
-  grid-template-areas: "img title rate"
-                        "img date  ..."
-                        "img genre  ..."
-                        "text text text"
-                        "star star star";
+  grid-template-areas:
+    "img title rate"
+    "img date  ..."
+    "img genre  ..."
+    "text text text"
+    "star star star";
 }
 
 .movie_img {
   grid-area: img;
 }
 
-.movie_img img{
+.movie_img img {
   width: 100%;
   height: auto;
 }
@@ -80,7 +100,6 @@ nav ul {
   align-items: center;
   grid-area: rate;
   justify-self: end;
-
 }
 
 .movie_date {
@@ -98,23 +117,19 @@ nav ul {
 }
 
 .bg-red {
-  border-color: #E90000;
+  border-color: #e90000;
 }
 
 .bg-orange {
-  border-color: #E97E00;
+  border-color: #e97e00;
 }
 
 .bg-yellow {
-  border-color: #E9D100;
+  border-color: #e9d100;
 }
 
 .bg-green {
-  border-color: #66E900;
-}
-
-.search {
-  width: 100%;
+  border-color: #66e900;
 }
 
 .stars .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
@@ -144,12 +159,12 @@ nav ul {
 
   .item {
     max-width: 450px;
-    grid-template-areas: "img title rate"
-                        "img date ..."
-                        "img genre ..."
-                        "img text text"
-                        "img star star";
+    grid-template-areas:
+      "img title rate"
+      "img date ..."
+      "img genre ..."
+      "img text text"
+      "img star star";
     grid-template-columns: 35% 1fr 1fr;
   }
-
 }

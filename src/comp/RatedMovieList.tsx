@@ -3,22 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
 import { MovieItem } from "./MovieItem";
 import { ErrorAlert } from "./Alert";
-import { Api } from "./Api";
+import { Api } from "/src/const/Api";
 import { Pages } from "./Pages";
-import { useGuestSession } from "./GuestContext";
-
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  release_date: string;
-  poster_path: string;
-  rating: number;
-  vote_average: number;
-  genre_ids: number[];
-}
-
-// const key = "2176ee0575aeb26423d516f34f7ee67f";
+import { useGuestSession } from "../context/GuestContext";
+import {Movie} from "./types"
 
 const RatedMovies: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -55,7 +43,6 @@ const RatedMovies: React.FC = () => {
 
   return (
     <div>
-      <h1>Rated Movies</h1>
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
       <ul className="list">

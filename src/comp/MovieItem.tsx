@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Rate } from "antd";
 import { format } from "date-fns";
 import cn from "classnames";
-import { useGenres } from "./GenreContext";
-import { Api } from "./Api";
-import { useMovieRatings } from "./RatingContext";
+import { useGenres } from "../context/GenreContext";
+import { Api } from "/src/const/Api";
+import { useMovieRatings } from "/src/context/RatingContext";
 
 interface MovieCardProps {
   title: string;

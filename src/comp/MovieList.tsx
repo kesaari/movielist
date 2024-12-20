@@ -1,26 +1,13 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Spinner } from "./Spinner";
-import { MovieItem } from "./MovieItem";
-import { ErrorAlert } from "./Alert";
-import { useDebounce } from "use-debounce";
-import { Api } from "./Api";
-import { Pages } from "./Pages";
-import { useGuestSession } from "./GuestContext";
-
-
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  release_date: string;
-  poster_path: string;
-  rating: number;
-  vote_average: number;
-  genre_ids: number[];
-}
-
-// const key = "2176ee0575aeb26423d516f34f7ee67f";
+import React, {useEffect, useState} from "react";
+import {Spinner} from "./Spinner";
+import {MovieItem} from "./MovieItem";
+import {ErrorAlert} from "./Alert";
+import {useDebounce} from "use-debounce";
+import {Api} from "/src/const/Api";
+import {Pages} from "./Pages";
+import {useGuestSession} from "../context/GuestContext";
+import {Movie} from "./types";
 
 const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -67,40 +54,39 @@ const MovieList: React.FC = () => {
   };
 
   return (
-
-    
     <div>
-      <h1>Movie List</h1>
       <input
         className="search"
         placeholder="Начните писать для поиска"
         onChange={onSearch}
       />
-      
-      {loading && <Spinner />}
-      {error && <ErrorAlert text={error} />}
-      <ul className="list">
-        {movies.map((movie) => (
-          <li className="item" key={movie.id}>
-            <MovieItem
-              title={movie.title}
-              releaseDate={movie.release_date}
-              overview={movie.overview}
-              rating={Number(movie.vote_average.toFixed(1))}
-              posterPath={movie.poster_path}
-              genreIds={movie.genre_ids}
-              movieId={movie.id}
-              guestSessionId={guestSessionId as string}
-            />
-          </li>
-        ))}
-      </ul>
-      {totalResults ? <Pages
-        onChange={handlePageChange}
-        defaultCurrent={currentPage}
-        total={totalResults}
-      /> : null}
-      
+      <div className="content">
+        {loading && <Spinner />}
+        {error && <ErrorAlert text={error} />}
+        <ul className="list">
+          {movies.map((movie) => (
+            <li className="item" key={movie.id}>
+              <MovieItem
+                title={movie.title}
+                releaseDate={movie.release_date}
+                overview={movie.overview}
+                rating={Number(movie.vote_average.toFixed(1))}
+                posterPath={movie.poster_path}
+                genreIds={movie.genre_ids}
+                movieId={movie.id}
+                guestSessionId={guestSessionId as string}
+              />
+            </li>
+          ))}
+        </ul>
+        {totalResults ? (
+          <Pages
+            onChange={handlePageChange}
+            defaultCurrent={currentPage}
+            total={totalResults}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

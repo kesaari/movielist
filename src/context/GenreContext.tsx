@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import {Api} from "./Api";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import {Api} from "/src/const/Api";
 
 interface GenreContextType {
   genres: any[];
@@ -11,9 +17,7 @@ interface GenreProviderProps {
   children: ReactNode;
 }
 
-// const key = "2176ee0575aeb26423d516f34f7ee67f"
-
-export const GenreProvider: React.FC<GenreProviderProps> = ({ children }) => {
+export const GenreProvider: React.FC<GenreProviderProps> = ({children}) => {
   const [genres, setGenres] = useState<any[]>([]);
   const api = new Api();
 
@@ -31,9 +35,7 @@ export const GenreProvider: React.FC<GenreProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <GenreContext.Provider value={{ genres }}>
-      {children}
-    </GenreContext.Provider>
+    <GenreContext.Provider value={{genres}}>{children}</GenreContext.Provider>
   );
 };
 

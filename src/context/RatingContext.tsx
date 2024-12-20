@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { Api } from "./Api";
-import { useGuestSession } from "./GuestContext";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import {Api} from "/src/const/Api";
+import {useGuestSession} from "../context/GuestContext";
 
 interface MovieRating {
   movieId: number;
@@ -12,13 +18,17 @@ interface MovieRatingsContextType {
   setMovieRating: (movieId: number, rating: number) => void;
 }
 
-const MovieRatingsContext = createContext<MovieRatingsContextType | undefined>(undefined);
+const MovieRatingsContext = createContext<MovieRatingsContextType | undefined>(
+  undefined
+);
 
 interface MovieRatingsProviderProps {
   children: ReactNode;
 }
 
-export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({ children }) => {
+export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({
+  children,
+}) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);
   const api = new Api();
   const guestSessionId = useGuestSession();
@@ -28,7 +38,12 @@ export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({ chil
       if (guestSessionId) {
         try {
           const ratedMovies = await api.fetchRatedMovies(guestSessionId);
-          setMovieRatings(ratedMovies.map((movie: any) => ({ movieId: movie.id, rating: movie.rating })));
+          setMovieRatings(
+            ratedMovies.map((movie: any) => ({
+              movieId: movie.id,
+              rating: movie.rating,
+            }))
+          );
         } catch (err) {
           console.error("Ошибка запроса фильмов:", err);
         }
@@ -39,20 +54,20 @@ export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({ chil
   }, [guestSessionId]);
 
   const setMovieRating = (movieId: number, rating: number) => {
-    setMovieRatings((prevRatings) => {
-      const existingRatingIndex = prevRatings.findIndex((r) => r.movieId === movieId);
-      if (existingRatingIndex !== -1) {
-        const updatedRatings = [...prevRatings];
-        updatedRatings[existingRatingIndex] = { movieId, rating };
+    setMovieRatings((prev) => {
+      const ind = prev.findIndex((r) => r.movieId === movieId);
+      if (ind !== -1) {
+        const updatedRatings = [...prev];
+        updatedRatings[ind] = {movieId, rating};
         return updatedRatings;
       } else {
-        return [...prevRatings, { movieId, rating }];
+        return [...prev, {movieId, rating}];
       }
     });
   };
 
   return (
-    <MovieRatingsContext.Provider value={{ movieRatings, setMovieRating }}>
+    <MovieRatingsContext.Provider value={{movieRatings, setMovieRating}}>
       {children}
     </MovieRatingsContext.Provider>
   );
