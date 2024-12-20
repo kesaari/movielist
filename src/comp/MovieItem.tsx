@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Rate } from "antd";
 import { format } from "date-fns";
 import cn from "classnames";
 import { useGenres } from "../context/GenreContext";
-import { Api } from "/src/const/Api";
-import { useMovieRatings } from "/src/context/RatingContext";
+import { Api } from "../const/Api";
+import { useMovieRatings } from "../context/RatingContext";
 
 interface MovieCardProps {
   title: string;
@@ -16,8 +16,6 @@ interface MovieCardProps {
   movieId: number;
   guestSessionId: string;
 }
-
-// const key = "2176ee0575aeb26423d516f34f7ee67f";
 
 const MovieItem: React.FC<MovieCardProps> = ({
   title,

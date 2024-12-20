@@ -4,10 +4,10 @@ import {Spinner} from "./Spinner";
 import {MovieItem} from "./MovieItem";
 import {ErrorAlert} from "./Alert";
 import {useDebounce} from "use-debounce";
-import {Api} from "/src/const/Api";
+import {Api} from "../const/Api";
 import {Pages} from "./Pages";
 import {useGuestSession} from "../context/GuestContext";
-import {Movie} from "./types";
+import {Movie} from "../const/types";
 
 const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);

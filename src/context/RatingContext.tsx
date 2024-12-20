@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import {Api} from "/src/const/Api";
+import {Api} from "../const/Api";
 import {useGuestSession} from "../context/GuestContext";
 
 interface MovieRating {
