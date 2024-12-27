@@ -4,8 +4,10 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  PropsWithChildren
 } from "react";
 import {api} from "../const/Api";
+
 
 interface Genre {
   id: number;
@@ -18,12 +20,13 @@ interface GenreContextType {
 
 const GenreContext = createContext<GenreContextType | undefined>(undefined);
 
-interface GenreProviderProps {
+interface Props {
   children: ReactNode;
 }
 
-export const GenreProvider: React.FC<GenreProviderProps> = ({children}) => {
+export const GenreProvider: React.FC<PropsWithChildren<Props>> = ({children}) => {
   const [genres, setGenres] = useState<Genre[]>([]);
+
 
   const fetchGenres = async () => {
     try {
@@ -36,7 +39,7 @@ export const GenreProvider: React.FC<GenreProviderProps> = ({children}) => {
 
   useEffect(() => {
     fetchGenres();
-  }, []);
+  }, [genres]);
 
   return (
     <GenreContext.Provider value={{genres}}>{children}</GenreContext.Provider>

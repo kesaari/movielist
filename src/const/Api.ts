@@ -69,5 +69,5 @@ class Api {
     return data.results;
   }
 }
-
-export const api = new Api();
+const api = new Api();
+export {api}

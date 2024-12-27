@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  PropsWithChildren
 } from "react";
 import {api} from "../const/Api";
 
@@ -15,11 +16,11 @@ const GuestSessionContext = createContext<GuestSessionContextType | undefined>(
   undefined
 );
 
-interface GuestSessionProviderProps {
+interface Props{
   children: ReactNode;
 }
 
-export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({
+export const GuestSessionProvider: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);

@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Routes, Link, Navigate} from "react-router-dom";
-import MovieList from "./comp/MovieList";
-import RatedMovies from "./comp/RatedMovieList";
+import {MovieList} from "./comp/MovieList";
+import {RatedMovies} from "./comp/RatedMovieList";
 import {GenreProvider} from "./context/GenreContext";
 import {GuestSessionProvider} from "./context/GuestContext";
 import {MovieRatingsProvider} from "./context/RatingContext";
@@ -49,4 +49,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export {App};

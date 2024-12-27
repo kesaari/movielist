@@ -6,7 +6,7 @@ import { useGenres } from "../context/GenreContext";
 import {api} from "../const/Api";
 import { useMovieRatings } from "../context/RatingContext";
 
-interface MovieCardProps {
+interface Props {
   title: string;
   releaseDate: string;
   overview: string;
@@ -17,7 +17,7 @@ interface MovieCardProps {
   guestSessionId: string;
 }
 
-const MovieItem: React.FC<MovieCardProps> = ({
+const MovieItem: React.FC<Props> = ({
   title,
   releaseDate,
   overview,
@@ -30,6 +30,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
   const { movieRatings, setMovieRating } = useMovieRatings();
   const genres = useGenres();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
+
 
   const userRating = movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
 
@@ -46,7 +47,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
   try {
     formattedReleaseDate = format(new Date(releaseDate), "MMMM d, yyyy");
   } catch (error) {
-    console.error("Неправильный формат даты!", releaseDate);
+    console.error("Неправильный формат даты!", error, releaseDate);
   }
 
   const getGenreElements = (genreIds: number[]) => {
@@ -64,7 +65,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
         console.error("Ошибка рейтинга: статус 201");
       }
     } catch (err) {
-      console.error("Ошибка рейтинга: компонент");
+      console.error("Ошибка рейтинга: компонент", err);
     }
   };
 
@@ -85,7 +86,7 @@ const MovieItem: React.FC<MovieCardProps> = ({
           >
             {rating}
           </div>
-        <div className="movie_date">{formattedReleaseDate}</div>
+        <div className="movie_date">{formattedReleaseDate ? formattedReleaseDate : "Дата выхода неизвестна"}</div>
         <div className="movie_overview">{textCropping(overview)}</div>
         <div className="movie_genres">{getGenreElements(genreIds)}</div>
         <Rate

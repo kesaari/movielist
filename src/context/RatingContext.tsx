@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  PropsWithChildren
 } from "react";
 import {api} from "../const/Api";
 import {useGuestSession} from "../context/GuestContext";
@@ -23,11 +24,11 @@ const MovieRatingsContext = createContext<MovieRatingsContextType | undefined>(
   undefined
 );
 
-interface MovieRatingsProviderProps {
+interface Props {
   children: ReactNode;
 }
 
-export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({
+export const MovieRatingsProvider: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);

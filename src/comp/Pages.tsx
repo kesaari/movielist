@@ -1,13 +1,13 @@
 import React from "react";
 import { Pagination } from "antd";
 
-interface CustomPaginationProps {
+interface Props {
   onChange: (page: number) => void;
   defaultCurrent: number;
   total: number;
 }
 
-const Pages: React.FC<CustomPaginationProps> = ({
+const Pages: React.FC<Props> = ({
   onChange,
   defaultCurrent,
   total,

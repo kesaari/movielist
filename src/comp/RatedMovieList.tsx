@@ -69,4 +69,4 @@ const RatedMovies: React.FC = () => {
   );
 };
 
-export default RatedMovies;
+export {RatedMovies};
