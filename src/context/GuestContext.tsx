@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import {Api} from "../const/Api";
+import {api} from "../const/Api";
 
 interface GuestSessionContextType {
   guestSessionId: string | null;
@@ -23,7 +23,6 @@ export const GuestSessionProvider: React.FC<GuestSessionProviderProps> = ({
   children,
 }) => {
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
-  const api = new Api();
 
   useEffect(() => {
     const initSession = async () => {

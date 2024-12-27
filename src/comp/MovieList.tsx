@@ -4,7 +4,7 @@ import {Spinner} from "./Spinner";
 import {MovieItem} from "./MovieItem";
 import {ErrorAlert} from "./Alert";
 import {useDebounce} from "use-debounce";
-import {Api} from "../const/Api";
+import {api} from "../const/Api";
 import {Pages} from "./Pages";
 import {useGuestSession} from "../context/GuestContext";
 import {Movie} from "../const/types";
@@ -18,7 +18,6 @@ const MovieList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
   const guestSessionId = useGuestSession();
-  const api = new Api();
 
   const fetchMovies = async (page: number = 1) => {
     try {

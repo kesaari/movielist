@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
 import { MovieItem } from "./MovieItem";
 import { ErrorAlert } from "./Alert";
-import { Api } from "../const/Api";
+import {api} from "../const/Api";
 import { Pages } from "./Pages";
 import { useGuestSession } from "../context/GuestContext";
 import {Movie} from "../const/types"
@@ -15,7 +15,6 @@ const RatedMovies: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
   const guestSessionId = useGuestSession();
-  const api = new Api();
 
   const fetchRatedMovies = async (page: number = 1) => {
     if (!guestSessionId) return;

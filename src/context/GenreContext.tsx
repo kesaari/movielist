@@ -5,10 +5,15 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import {Api} from "../const/Api";
+import {api} from "../const/Api";
+
+interface Genre {
+  id: number;
+  name: string;
+}
 
 interface GenreContextType {
-  genres: any[];
+  genres: Genre[];
 }
 
 const GenreContext = createContext<GenreContextType | undefined>(undefined);
@@ -18,8 +23,7 @@ interface GenreProviderProps {
 }
 
 export const GenreProvider: React.FC<GenreProviderProps> = ({children}) => {
-  const [genres, setGenres] = useState<any[]>([]);
-  const api = new Api();
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   const fetchGenres = async () => {
     try {

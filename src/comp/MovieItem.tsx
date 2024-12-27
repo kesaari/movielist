@@ -3,7 +3,7 @@ import { Rate } from "antd";
 import { format } from "date-fns";
 import cn from "classnames";
 import { useGenres } from "../context/GenreContext";
-import { Api } from "../const/Api";
+import {api} from "../const/Api";
 import { useMovieRatings } from "../context/RatingContext";
 
 interface MovieCardProps {
@@ -29,25 +29,9 @@ const MovieItem: React.FC<MovieCardProps> = ({
 }) => {
   const { movieRatings, setMovieRating } = useMovieRatings();
   const genres = useGenres();
-  const api = new Api();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
 
   const userRating = movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
-
-  // useEffect(() => {
-  //   const fetchRating = async () => {
-  //     try {
-  //       const ratedMovies = await api.fetchRatedMovies(guestSessionId);
-  //       const ratedMovie = ratedMovies.find((movie: any) => movie.id === movieId);
-  //       if (ratedMovie) {
-  //         setUserRating(ratedMovie.rating);
-  //       }
-  //     } catch (err) {
-  //       console.error("Ошибка запроса фильмов:", err);
-  //     }
-  //   };
-  //   fetchRating();
-  // }, [guestSessionId, movieId]);
 
   const textCropping = (str: string, max = 200, ellipsis = "…") => {
     if (str.length <= max) return str;

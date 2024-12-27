@@ -5,8 +5,9 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import {Api} from "../const/Api";
+import {api} from "../const/Api";
 import {useGuestSession} from "../context/GuestContext";
+import {Movie} from "../const/types";
 
 interface MovieRating {
   movieId: number;
@@ -30,7 +31,6 @@ export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({
   children,
 }) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);
-  const api = new Api();
   const guestSessionId = useGuestSession();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const MovieRatingsProvider: React.FC<MovieRatingsProviderProps> = ({
         try {
           const ratedMovies = await api.fetchRatedMovies(guestSessionId);
           setMovieRatings(
-            ratedMovies.map((movie: any) => ({
+            ratedMovies.map((movie: Movie) => ({
               movieId: movie.id,
               rating: movie.rating,
             }))
