@@ -1,36 +1,31 @@
 import React from "react";
-import {BrowserRouter, Route, Routes, Link, Navigate} from "react-router-dom";
-import {MovieList} from "./comp/MovieList";
-import {RatedMovies} from "./comp/RatedMovieList";
-import {GenreProvider} from "./context/GenreContext";
-import {GuestSessionProvider} from "./context/GuestContext";
-import {MovieRatingsProvider} from "./context/RatingContext";
-import {ErrorAlert} from "./comp/Alert";
-import {useNetworkState} from "use-network-state3";
+import { BrowserRouter, Route, Routes, Link, Navigate } from "react-router-dom";
+import MovieList from "./comp/MovieList";
+import RatedMovies from "./comp/RatedMovieList";
+import { GenreProvider } from "../src/context/GenreContext";
+import { MovieRatingsProvider } from "../src/context/RatingContext";
+import { ErrorAlert } from "./comp/Alert";
+import { useNetworkState } from "use-network-state3";
+import { ApiProvider } from "./context/ApiContext";
 
 const App: React.FC = () => {
   const networkState = useNetworkState();
 
-  if (!networkState.online)
-    return <ErrorAlert text={"У вас плохое соединение"} />;
+  if (!networkState.online) return <ErrorAlert text={'У вас плохое соединение'} />
 
   return (
-    <GenreProvider>
-      <GuestSessionProvider>
+    <ApiProvider>
+      <GenreProvider>
         <MovieRatingsProvider>
           <BrowserRouter>
             <div>
               <nav className="nav">
                 <ul>
                   <li>
-                    <Link className="nav-btn" to="/search">
-                      Поиск
-                    </Link>
+                    <Link className="nav-btn" to="/search">Поиск</Link>
                   </li>
                   <li>
-                    <Link className="nav-btn" to="/rated">
-                      Ваши оценки
-                    </Link>
+                    <Link className="nav-btn" to="/rated">Ваши оценки</Link>
                   </li>
                 </ul>
               </nav>
@@ -44,9 +39,9 @@ const App: React.FC = () => {
             </div>
           </BrowserRouter>
         </MovieRatingsProvider>
-      </GuestSessionProvider>
-    </GenreProvider>
+      </GenreProvider>
+    </ApiProvider>
   );
 };
 
-export {App};
+export default App;

@@ -3,10 +3,10 @@ import { Rate } from "antd";
 import { format } from "date-fns";
 import cn from "classnames";
 import { useGenres } from "../context/GenreContext";
-import {api} from "../const/Api";
 import { useMovieRatings } from "../context/RatingContext";
+import { useApi } from "../context/ApiContext";
 
-interface Props {
+interface MovieCardProps {
   title: string;
   releaseDate: string;
   overview: string;
@@ -14,10 +14,9 @@ interface Props {
   posterPath: string;
   genreIds: number[];
   movieId: number;
-  guestSessionId: string;
 }
 
-const MovieItem: React.FC<Props> = ({
+const MovieItem: React.FC<MovieCardProps> = ({
   title,
   releaseDate,
   overview,
@@ -25,12 +24,11 @@ const MovieItem: React.FC<Props> = ({
   posterPath,
   genreIds,
   movieId,
-  guestSessionId,
 }) => {
   const { movieRatings, setMovieRating } = useMovieRatings();
   const genres = useGenres();
+  const { rateMovie } = useApi();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
-
 
   const userRating = movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
 
@@ -47,7 +45,7 @@ const MovieItem: React.FC<Props> = ({
   try {
     formattedReleaseDate = format(new Date(releaseDate), "MMMM d, yyyy");
   } catch (error) {
-    console.error("Неправильный формат даты!", error, releaseDate);
+    console.error("Неправильный формат даты!", releaseDate);
   }
 
   const getGenreElements = (genreIds: number[]) => {
@@ -60,12 +58,12 @@ const MovieItem: React.FC<Props> = ({
   const handleRate = async (value: number) => {
     setMovieRating(movieId, value);
     try {
-      const response = await api.rateMovie(movieId, value, guestSessionId);
+      const response = await rateMovie(movieId, value);
       if (response.status === 201) {
         console.error("Ошибка рейтинга: статус 201");
       }
     } catch (err) {
-      console.error("Ошибка рейтинга: компонент", err);
+      console.error("Ошибка рейтинга: компонент");
     }
   };
 
@@ -74,28 +72,27 @@ const MovieItem: React.FC<Props> = ({
       <div className="movie_img">
         <img src={posterUrl} />
       </div>
-
-          <div className="movie_title">{title}</div>
-          <div
-            className={cn("movie_rating", {
-              "bg-red": rating <= 3,
-              "bg-orange": 3 < rating && rating <= 5,
-              "bg-yellow": 5 < rating && rating <= 7,
-              "bg-green": rating > 7,
-            })}
-          >
-            {rating}
-          </div>
-        <div className="movie_date">{formattedReleaseDate ? formattedReleaseDate : "Дата выхода неизвестна"}</div>
-        <div className="movie_overview">{textCropping(overview)}</div>
-        <div className="movie_genres">{getGenreElements(genreIds)}</div>
-        <Rate
-          className="stars"
-          count={10}
-          value={userRating ? userRating : 0}
-          onChange={(value) => handleRate(value)}
-          style={{ gridArea: "star", justifySelf: "center" }}
-        />
+      <div className="movie_title">{title}</div>
+      <div
+        className={cn("movie_rating", {
+          "bg-red": rating <= 3,
+          "bg-orange": 3 < rating && rating <= 5,
+          "bg-yellow": 5 < rating && rating <= 7,
+          "bg-green": rating > 7,
+        })}
+      >
+        {rating}
+      </div>
+      <div className="movie_date">{formattedReleaseDate}</div>
+      <div className="movie_overview">{textCropping(overview)}</div>
+      <div className="movie_genres">{getGenreElements(genreIds)}</div>
+      <Rate
+        className="stars"
+        count={10}
+        value={userRating ? userRating : 0}
+        onChange={(value) => handleRate(value)}
+        style={{ gridArea: "star", justifySelf: "center" }}
+      />
     </>
   );
 };

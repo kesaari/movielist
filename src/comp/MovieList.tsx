@@ -1,13 +1,22 @@
 import "./App.css";
-import React, {useEffect, useState} from "react";
-import {Spinner} from "./Spinner";
-import {MovieItem} from "./MovieItem";
-import {ErrorAlert} from "./Alert";
-import {useDebounce} from "use-debounce";
-import {api} from "../const/Api";
-import {Pages} from "./Pages";
-import {useGuestSession} from "../context/GuestContext";
-import {Movie} from "../const/types";
+import React, { useEffect, useState } from "react";
+import { Spinner } from "./Spinner";
+import { MovieItem } from "./MovieItem";
+import { ErrorAlert } from "./Alert";
+import { useDebounce } from "use-debounce";
+import { Pages } from "./Pages";
+import { useApi } from "../context/ApiContext";
+
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  release_date: string;
+  poster_path: string;
+  rating: number;
+  vote_average: number;
+  genre_ids: number[];
+}
 
 const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -17,12 +26,12 @@ const MovieList: React.FC = () => {
   const [debouncedSearchWord] = useDebounce(searchWord, 500);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const guestSessionId = useGuestSession();
+  const { searchMovies } = useApi();
 
   const fetchMovies = async (page: number = 1) => {
     try {
       setLoading(true);
-      const data = await api.searchMovies(debouncedSearchWord, page);
+      const data = await searchMovies(debouncedSearchWord, page);
       setMovies(data.results);
       setTotalResults(data.total_results);
       setLoading(false);
@@ -39,10 +48,10 @@ const MovieList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (guestSessionId && debouncedSearchWord) {
+    if (debouncedSearchWord) {
       fetchMovies(currentPage);
     }
-  }, [debouncedSearchWord, currentPage, guestSessionId]);
+  }, [debouncedSearchWord, currentPage]);
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(event.target.value);
@@ -59,35 +68,32 @@ const MovieList: React.FC = () => {
         placeholder="Начните писать для поиска"
         onChange={onSearch}
       />
-      <div className="content">
-        {loading && <Spinner />}
-        {error && <ErrorAlert text={error} />}
-        <ul className="list">
-          {movies.map((movie) => (
-            <li className="item" key={movie.id}>
-              <MovieItem
-                title={movie.title}
-                releaseDate={movie.release_date}
-                overview={movie.overview}
-                rating={Number(movie.vote_average.toFixed(1))}
-                posterPath={movie.poster_path}
-                genreIds={movie.genre_ids}
-                movieId={movie.id}
-                guestSessionId={guestSessionId as string}
-              />
-            </li>
-          ))}
-        </ul>
-        {totalResults ? (
-          <Pages
-            onChange={handlePageChange}
-            defaultCurrent={currentPage}
-            total={totalResults}
-          />
-        ) : null}
-      </div>
+      {loading && <Spinner />}
+      {error && <ErrorAlert text={error} />}
+      <ul className="list">
+        {movies.map((movie) => (
+          <li className="item" key={movie.id}>
+            <MovieItem
+              title={movie.title}
+              releaseDate={movie.release_date}
+              overview={movie.overview}
+              rating={Number(movie.vote_average.toFixed(1))}
+              posterPath={movie.poster_path}
+              genreIds={movie.genre_ids}
+              movieId={movie.id}
+            />
+          </li>
+        ))}
+      </ul>
+      {totalResults ? (
+        <Pages
+          onChange={handlePageChange}
+          defaultCurrent={currentPage}
+          total={totalResults}
+        />
+      ) : null}
     </div>
   );
 };
 
-export {MovieList};
+export default MovieList;

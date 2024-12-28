@@ -1,6 +1,6 @@
 import {getOptions, postOptions} from "./types";
 
-class Api {
+export class Api {
   baseUrl: string;
 
   constructor() {
@@ -69,5 +69,3 @@ class Api {
     return data.results;
   }
 }
-const api = new Api();
-export {api}

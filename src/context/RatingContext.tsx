@@ -6,9 +6,7 @@ import React, {
   ReactNode,
   PropsWithChildren
 } from "react";
-import {api} from "../const/Api";
-import {useGuestSession} from "../context/GuestContext";
-import {Movie} from "../const/types";
+import { useApi } from "../context/ApiContext";
 
 interface MovieRating {
   movieId: number;
@@ -32,43 +30,41 @@ export const MovieRatingsProvider: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);
-  const guestSessionId = useGuestSession();
+  const { fetchRatedMovies } = useApi();
 
   useEffect(() => {
     const fetchRatings = async () => {
-      if (guestSessionId) {
-        try {
-          const ratedMovies = await api.fetchRatedMovies(guestSessionId);
-          setMovieRatings(
-            ratedMovies.map((movie: Movie) => ({
-              movieId: movie.id,
-              rating: movie.rating,
-            }))
-          );
-        } catch (err) {
-          console.error("Ошибка запроса фильмов:", err);
-        }
+      try {
+        const ratedMovies = await fetchRatedMovies(1);
+        setMovieRatings(
+          ratedMovies.map((movie) => ({
+            movieId: movie.id,
+            rating: movie.rating,
+          }))
+        );
+      } catch (err) {
+        console.error("Ошибка запроса фильмов:", err);
       }
     };
 
     fetchRatings();
-  }, [guestSessionId]);
+  }, [fetchRatedMovies]);
 
   const setMovieRating = (movieId: number, rating: number) => {
     setMovieRatings((prev) => {
       const ind = prev.findIndex((r) => r.movieId === movieId);
       if (ind !== -1) {
         const updatedRatings = [...prev];
-        updatedRatings[ind] = {movieId, rating};
+        updatedRatings[ind] = { movieId, rating };
         return updatedRatings;
       } else {
-        return [...prev, {movieId, rating}];
+        return [...prev, { movieId, rating }];
       }
     });
   };
 
   return (
-    <MovieRatingsContext.Provider value={{movieRatings, setMovieRating}}>
+    <MovieRatingsContext.Provider value={{ movieRatings, setMovieRating }}>
       {children}
     </MovieRatingsContext.Provider>
   );

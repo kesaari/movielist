@@ -3,10 +3,19 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
 import { MovieItem } from "./MovieItem";
 import { ErrorAlert } from "./Alert";
-import {api} from "../const/Api";
 import { Pages } from "./Pages";
-import { useGuestSession } from "../context/GuestContext";
-import {Movie} from "../const/types"
+import { useApi } from "../context/ApiContext";
+
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  release_date: string;
+  poster_path: string;
+  rating: number;
+  vote_average: number;
+  genre_ids: number[];
+}
 
 const RatedMovies: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -14,13 +23,12 @@ const RatedMovies: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const guestSessionId = useGuestSession();
+  const { fetchRatedMovies } = useApi();
 
-  const fetchRatedMovies = async (page: number = 1) => {
-    if (!guestSessionId) return;
+  const fetchRatedMoviesData = async (page: number = 1) => {
     try {
       setLoading(true);
-      const data = await api.fetchRatedMovies(guestSessionId, page);
+      const data = await fetchRatedMovies(page);
       setMovies(data);
       setTotalResults(data.length);
       setLoading(false);
@@ -31,10 +39,8 @@ const RatedMovies: React.FC = () => {
   };
 
   useEffect(() => {
-    if (guestSessionId) {
-      fetchRatedMovies(currentPage);
-    }
-  }, [currentPage, guestSessionId]);
+    fetchRatedMoviesData(currentPage);
+  }, [currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -42,6 +48,7 @@ const RatedMovies: React.FC = () => {
 
   return (
     <div>
+      <h1>Rated Movies</h1>
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
       <ul className="list">
@@ -55,18 +62,19 @@ const RatedMovies: React.FC = () => {
               posterPath={movie.poster_path}
               genreIds={movie.genre_ids}
               movieId={movie.id}
-              guestSessionId={guestSessionId as string}
             />
           </li>
         ))}
       </ul>
-      {totalResults ? <Pages
-              onChange={handlePageChange}
-              defaultCurrent={currentPage}
-              total={totalResults}
-            /> : null}
+      {totalResults ? (
+        <Pages
+          onChange={handlePageChange}
+          defaultCurrent={currentPage}
+          total={totalResults}
+        />
+      ) : null}
     </div>
   );
 };
 
-export {RatedMovies};
+export default RatedMovies;
