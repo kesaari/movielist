@@ -1,10 +1,10 @@
-import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Spinner } from "./Spinner";
-import { MovieItem } from "./MovieItem";
-import { ErrorAlert } from "./Alert";
-import { Pages } from "./Pages";
-import { useApi } from "../context/ApiContext";
+import styles from "./component.module.css";
+import React, {useEffect, useState} from "react";
+import {Spinner} from "./Spinner";
+import {MovieItem} from "./MovieItem";
+import {ErrorAlert} from "./Alert";
+import {Pages} from "./Pages";
+import {useApi} from "../context/ApiContext";
 
 interface Movie {
   id: number;
@@ -17,13 +17,13 @@ interface Movie {
   genre_ids: number[];
 }
 
-const RatedMovies: React.FC = () => {
+export const RatedMovies: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const { fetchRatedMovies } = useApi();
+  const {fetchRatedMovies} = useApi();
 
   const fetchRatedMoviesData = async (page: number = 1) => {
     try {
@@ -51,9 +51,9 @@ const RatedMovies: React.FC = () => {
       <h1>Ваши оценки</h1>
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
-      <ul className="list">
+      <ul className={styles.list}>
         {movies.map((movie) => (
-          <li className="item" key={movie.id}>
+          <li className={styles.item} key={movie.id}>
             <MovieItem
               title={movie.title}
               releaseDate={movie.release_date}
@@ -76,5 +76,3 @@ const RatedMovies: React.FC = () => {
     </div>
   );
 };
-
-export default RatedMovies;

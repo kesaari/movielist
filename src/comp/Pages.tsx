@@ -1,5 +1,5 @@
 import React from "react";
-import { Pagination } from "antd";
+import {Pagination} from "antd";
 
 interface Props {
   onChange: (page: number) => void;
@@ -7,18 +7,14 @@ interface Props {
   total: number;
 }
 
-const Pages: React.FC<Props> = ({
-  onChange,
-  defaultCurrent,
-  total,
-}) => {
+const Pages: React.FC<Props> = ({onChange, defaultCurrent, total}) => {
   return (
     <Pagination
       onChange={onChange}
       defaultCurrent={defaultCurrent}
       total={total}
       showSizeChanger={false}
-      align='center'
+      align="center"
     />
   );
 };

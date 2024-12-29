@@ -1,10 +1,11 @@
 import React from "react";
-import { Rate } from "antd";
-import { format } from "date-fns";
+import {Rate} from "antd";
+import {format} from "date-fns";
 import cn from "classnames";
-import { useGenres } from "../context/GenreContext";
-import { useMovieRatings } from "../context/RatingContext";
-import { useApi } from "../context/ApiContext";
+import {useGenres} from "../context/GenreContext";
+import {useMovieRatings} from "../context/RatingContext";
+import {useApi} from "../context/ApiContext";
+import styles from "./component.module.css";
 
 interface MovieCardProps {
   title: string;
@@ -25,12 +26,13 @@ const MovieItem: React.FC<MovieCardProps> = ({
   genreIds,
   movieId,
 }) => {
-  const { movieRatings, setMovieRating } = useMovieRatings();
+  const {movieRatings, setMovieRating} = useMovieRatings();
   const genres = useGenres();
-  const { rateMovie } = useApi();
+  const {rateMovie} = useApi();
   const posterUrl = `https://image.tmdb.org/t/p/original${posterPath}`;
 
-  const userRating = movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
+  const userRating =
+    movieRatings.find((r) => r.movieId === movieId)?.rating || 0;
 
   const textCropping = (str: string, max = 200, ellipsis = "…") => {
     if (str.length <= max) return str;
@@ -51,7 +53,11 @@ const MovieItem: React.FC<MovieCardProps> = ({
   const getGenreElements = (genreIds: number[]) => {
     return genreIds.map((id) => {
       const genre = genres.find((genre) => genre.id === id);
-      return genre ? <div key={id} className="genre">{genre.name}</div> : null;
+      return genre ? (
+        <div key={id} className={styles.genre}>
+          {genre.name}
+        </div>
+      ) : null;
     });
   };
 
@@ -69,32 +75,32 @@ const MovieItem: React.FC<MovieCardProps> = ({
 
   return (
     <>
-      <div className="movie_img">
+      <div className={styles.movie_img}>
         <img src={posterUrl} />
       </div>
-      <div className="movie_title">{title}</div>
+      <div className={styles.movie_title}>{title}</div>
       <div
-        className={cn("movie_rating", {
-          "bg-red": rating <= 3,
-          "bg-orange": 3 < rating && rating <= 5,
-          "bg-yellow": 5 < rating && rating <= 7,
-          "bg-green": rating > 7,
+        className={cn(styles.movie_rating, {
+          [styles.bg_red]: rating <= 3,
+          [styles.bg_orange]: 3 < rating && rating <= 5,
+          [styles.bg_yellow]: 5 < rating && rating <= 7,
+          [styles.bg_green]: rating > 7,
         })}
       >
         {rating}
       </div>
-      <div className="movie_date">{formattedReleaseDate}</div>
-      <div className="movie_overview">{textCropping(overview)}</div>
-      <div className="movie_genres">{getGenreElements(genreIds)}</div>
+      <div className={styles.movie_date}>{formattedReleaseDate}</div>
+      <div className={styles.movie_overview}>{textCropping(overview)}</div>
+      <div className={styles.movie_genres}>{getGenreElements(genreIds)}</div>
       <Rate
-        className="stars"
+        className={styles.stars}
         count={10}
         value={userRating ? userRating : 0}
         onChange={(value) => handleRate(value)}
-        style={{ gridArea: "star", justifySelf: "center" }}
+        style={{gridArea: "star", justifySelf: "center"}}
       />
     </>
   );
 };
 
-export { MovieItem };
+export {MovieItem};

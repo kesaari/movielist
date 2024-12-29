@@ -1,5 +1,19 @@
-import React, { createContext, useContext, useEffect, useState, useRef, ReactNode, PropsWithChildren } from "react";
-import { getOptions, postOptions, Genre, Movie, SearchResults } from "../const/types";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  ReactNode,
+  PropsWithChildren,
+} from "react";
+import {
+  getOptions,
+  postOptions,
+  Genre,
+  Movie,
+  SearchResults,
+} from "../types/types";
 
 interface ApiContextType {
   fetchGuestSession: () => Promise<string | null>;
@@ -15,7 +29,9 @@ interface ApiProviderProps {
   children: ReactNode;
 }
 
-export const ApiProvider: React.FC<PropsWithChildren<ApiProviderProps>> = ({ children }) => {
+export const ApiProvider: React.FC<PropsWithChildren<ApiProviderProps>> = ({
+  children,
+}) => {
   const apiRef = useRef<Api | null>(null);
   const [guestSessionId, setGuestSessionId] = useState<string | null>(null);
 
@@ -66,7 +82,15 @@ export const ApiProvider: React.FC<PropsWithChildren<ApiProviderProps>> = ({ chi
   };
 
   return (
-    <ApiContext.Provider value={{ fetchGuestSession, fetchGenres, searchMovies, rateMovie, fetchRatedMovies }}>
+    <ApiContext.Provider
+      value={{
+        fetchGuestSession,
+        fetchGenres,
+        searchMovies,
+        rateMovie,
+        fetchRatedMovies,
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

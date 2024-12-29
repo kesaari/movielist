@@ -1,11 +1,11 @@
-import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Spinner } from "./Spinner";
-import { MovieItem } from "./MovieItem";
-import { ErrorAlert } from "./Alert";
-import { useDebounce } from "use-debounce";
-import { Pages } from "./Pages";
-import { useApi } from "../context/ApiContext";
+import styles from "./component.module.css";
+import React, {useEffect, useState} from "react";
+import {Spinner} from "./Spinner";
+import {MovieItem} from "./MovieItem";
+import {ErrorAlert} from "./Alert";
+import {useDebounce} from "use-debounce";
+import {Pages} from "./Pages";
+import {useApi} from "../context/ApiContext";
 
 interface Movie {
   id: number;
@@ -18,7 +18,7 @@ interface Movie {
   genre_ids: number[];
 }
 
-const MovieList: React.FC = () => {
+export const MovieList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ const MovieList: React.FC = () => {
   const [debouncedSearchWord] = useDebounce(searchWord, 500);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const { searchMovies } = useApi();
+  const {searchMovies} = useApi();
 
   const fetchMovies = async (page: number = 1) => {
     try {
@@ -64,15 +64,15 @@ const MovieList: React.FC = () => {
   return (
     <div>
       <input
-        className="search"
+        className={styles.search}
         placeholder="Начните писать для поиска"
         onChange={onSearch}
       />
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
-      <ul className="list">
+      <ul className={styles.list}>
         {movies.map((movie) => (
-          <li className="item" key={movie.id}>
+          <li className={styles.item} key={movie.id}>
             <MovieItem
               title={movie.title}
               releaseDate={movie.release_date}
@@ -95,5 +95,3 @@ const MovieList: React.FC = () => {
     </div>
   );
 };
-
-export default MovieList;

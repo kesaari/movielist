@@ -4,9 +4,9 @@ import React, {
   useEffect,
   useState,
   ReactNode,
-  PropsWithChildren
+  PropsWithChildren,
 } from "react";
-import { useApi } from "../context/ApiContext";
+import {useApi} from "../context/ApiContext";
 
 interface MovieRating {
   movieId: number;
@@ -30,7 +30,7 @@ export const MovieRatingsProvider: React.FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);
-  const { fetchRatedMovies } = useApi();
+  const {fetchRatedMovies} = useApi();
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -55,16 +55,16 @@ export const MovieRatingsProvider: React.FC<PropsWithChildren<Props>> = ({
       const ind = prev.findIndex((r) => r.movieId === movieId);
       if (ind !== -1) {
         const updatedRatings = [...prev];
-        updatedRatings[ind] = { movieId, rating };
+        updatedRatings[ind] = {movieId, rating};
         return updatedRatings;
       } else {
-        return [...prev, { movieId, rating }];
+        return [...prev, {movieId, rating}];
       }
     });
   };
 
   return (
-    <MovieRatingsContext.Provider value={{ movieRatings, setMovieRating }}>
+    <MovieRatingsContext.Provider value={{movieRatings, setMovieRating}}>
       {children}
     </MovieRatingsContext.Provider>
   );

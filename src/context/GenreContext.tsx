@@ -4,10 +4,10 @@ import React, {
   useEffect,
   useState,
   ReactNode,
-  PropsWithChildren
+  PropsWithChildren,
 } from "react";
-import { useApi } from "../context/ApiContext";
-import { Genre } from "../const/types";
+import {useApi} from "../context/ApiContext";
+import {Genre} from "../types/types";
 
 interface GenreContextType {
   genres: Genre[];
@@ -19,9 +19,11 @@ interface Props {
   children: ReactNode;
 }
 
-export const GenreProvider: React.FC<PropsWithChildren<Props>> = ({ children }) => {
+export const GenreProvider: React.FC<PropsWithChildren<Props>> = ({
+  children,
+}) => {
   const [genres, setGenres] = useState<Genre[]>([]);
-  const { fetchGenres } = useApi();
+  const {fetchGenres} = useApi();
 
   useEffect(() => {
     const fetchGenresData = async () => {
@@ -37,7 +39,7 @@ export const GenreProvider: React.FC<PropsWithChildren<Props>> = ({ children }) 
   }, [fetchGenres]);
 
   return (
-    <GenreContext.Provider value={{ genres }}>{children}</GenreContext.Provider>
+    <GenreContext.Provider value={{genres}}>{children}</GenreContext.Provider>
   );
 };
 
