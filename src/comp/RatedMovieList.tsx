@@ -48,7 +48,7 @@ const RatedMovies: React.FC = () => {
 
   return (
     <div>
-      <h1>Rated Movies</h1>
+      <h1>Ваши оценки</h1>
       {loading && <Spinner />}
       {error && <ErrorAlert text={error} />}
       <ul className="list">
