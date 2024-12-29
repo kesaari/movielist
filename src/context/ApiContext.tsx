@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
   useRef,
-  ReactNode,
   PropsWithChildren,
 } from "react";
 import {
@@ -25,11 +24,7 @@ interface ApiContextType {
 
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
-interface ApiProviderProps {
-  children: ReactNode;
-}
-
-export const ApiProvider: React.FC<PropsWithChildren<ApiProviderProps>> = ({
+export const ApiProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   const apiRef = useRef<Api | null>(null);

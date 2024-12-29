@@ -3,7 +3,6 @@ import React, {
   useContext,
   useEffect,
   useState,
-  ReactNode,
   PropsWithChildren,
 } from "react";
 import {useApi} from "../context/ApiContext";
@@ -22,11 +21,7 @@ const MovieRatingsContext = createContext<MovieRatingsContextType | undefined>(
   undefined
 );
 
-interface Props {
-  children: ReactNode;
-}
-
-export const MovieRatingsProvider: React.FC<PropsWithChildren<Props>> = ({
+export const MovieRatingsProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   const [movieRatings, setMovieRatings] = useState<MovieRating[]>([]);

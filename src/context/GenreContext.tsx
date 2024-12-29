@@ -3,7 +3,6 @@ import React, {
   useContext,
   useEffect,
   useState,
-  ReactNode,
   PropsWithChildren,
 } from "react";
 import {useApi} from "../context/ApiContext";
@@ -15,11 +14,7 @@ interface GenreContextType {
 
 const GenreContext = createContext<GenreContextType | undefined>(undefined);
 
-interface Props {
-  children: ReactNode;
-}
-
-export const GenreProvider: React.FC<PropsWithChildren<Props>> = ({
+export const GenreProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   const [genres, setGenres] = useState<Genre[]>([]);

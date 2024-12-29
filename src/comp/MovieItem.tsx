@@ -7,7 +7,7 @@ import {useMovieRatings} from "../context/RatingContext";
 import {useApi} from "../context/ApiContext";
 import styles from "./component.module.css";
 
-interface MovieCardProps {
+interface Props {
   title: string;
   releaseDate: string;
   overview: string;
@@ -17,7 +17,7 @@ interface MovieCardProps {
   movieId: number;
 }
 
-const MovieItem: React.FC<MovieCardProps> = ({
+const MovieItem: React.FC<Props> = ({
   title,
   releaseDate,
   overview,
